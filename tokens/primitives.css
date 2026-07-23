@@ -22,46 +22,47 @@
 
   --white: oklch(1 0 0);
   --black: oklch(0 0 0);
+  --overlay-50: oklch(0 0 0 / 0.5);
 
   /* ---- Status: error (hue 25) ---- */
   --error-bg:          oklch(0.96 0.0475 25);
   --error-border:      oklch(0.85 0.095 25);
   --error-base:        oklch(0.59 0.19 25);
-  --error-text:        oklch(0.415 0.19 25);
+  --error-text:        oklch(0.37 0.19 25);
   --error-bg-dark:     oklch(0.22 0.0665 25);
   --error-border-dark: oklch(0.34 0.095 25);
-  --error-base-dark:   oklch(0.72 0.19 25);
-  --error-text-dark:   oklch(0.94 0.1615 25);
+  --error-base-dark:   oklch(0.96 0.12 25);
+  --error-text-dark:   oklch(0.98 0.12 25);
 
   /* ---- Status: warning (hue 75) ---- */
   --warning-bg:          oklch(0.96 0.0375 75);
   --warning-border:      oklch(0.85 0.075 75);
   --warning-base:        oklch(0.62 0.15 75);
-  --warning-text:        oklch(0.435 0.15 75);
+  --warning-text:        oklch(0.40 0.15 75);
   --warning-bg-dark:     oklch(0.22 0.0525 75);
   --warning-border-dark: oklch(0.34 0.075 75);
   --warning-base-dark:   oklch(0.72 0.15 75);
-  --warning-text-dark:   oklch(0.86 0.1275 75);
+  --warning-text-dark:   oklch(0.90 0.11 75);
 
   /* ---- Status: success (hue 150) ---- */
   --success-bg:          oklch(0.96 0.03 150);
   --success-border:      oklch(0.85 0.06 150);
   --success-base:        oklch(0.62 0.12 150);
-  --success-text:        oklch(0.435 0.12 150);
+  --success-text:        oklch(0.38 0.12 150);
   --success-bg-dark:     oklch(0.22 0.042 150);
   --success-border-dark: oklch(0.34 0.06 150);
   --success-base-dark:   oklch(0.72 0.12 150);
-  --success-text-dark:   oklch(0.86 0.102 150);
+  --success-text-dark:   oklch(0.88 0.10 150);
 
   /* ---- Status: info (hue 240) ---- */
   --info-bg:          oklch(0.96 0.035 240);
   --info-border:      oklch(0.85 0.07 240);
   --info-base:        oklch(0.62 0.14 240);
-  --info-text:        oklch(0.435 0.14 240);
+  --info-text:        oklch(0.38 0.14 240);
   --info-bg-dark:     oklch(0.22 0.049 240);
   --info-border-dark: oklch(0.34 0.07 240);
   --info-base-dark:   oklch(0.72 0.14 240);
-  --info-text-dark:   oklch(0.86 0.119 240);
+  --info-text-dark:   oklch(0.90 0.11 240);
 
   /* ---- Brand slots (overridden per project in theme.css) ---- */
   /* Defaults are neutral so an unthemed project still ships accessible UI. */

@@ -39,5 +39,5 @@ and ask after.
 ## Gate 5: sync back
 
 If the component is generally useful (not project-specific), note it for
-sync back to the base-ds repo so future projects get it. Tell the human:
-"This belongs in base-ds, copy `components/ui/<name>.tsx` there."
+sync back to the Sortie repo so future projects get it. Tell the human:
+"This belongs in Sortie, copy `components/ui/<name>.tsx` there."

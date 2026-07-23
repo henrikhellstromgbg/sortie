@@ -45,6 +45,6 @@ number. Done. It is immediately active in Claude Code, Codex, and reviews.
 ## Process
 
 - P1: Missing a component, token, or pattern? Stop. Ask the human. Do not improvise a one-off
-- P2: New components go through the new-component skill: check composability first, build in `components/ui/`, add to examples, sync back to base-ds if generally useful
+- P2: New components go through the new-component skill: check composability first, build in `components/ui/`, add to examples, sync back to Sortie if generally useful
 - P3: Before marking any view as done, run the design-review skill checklist and `npm run design-check`
 - P4: Views are built ONLY from `components/ui/` plus layout primitives (div/flex/grid with token-based spacing)

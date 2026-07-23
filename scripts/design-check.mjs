@@ -8,6 +8,7 @@
 
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
+import ts from 'typescript';
 
 const ROOTS = ['app', 'components', 'examples', 'lib'];
 const EXT = /\.(tsx|ts|jsx|js|css)$/;
@@ -50,6 +51,7 @@ function maskComments(src, isCss) {
 
 const TW_PALETTE =
   '(?:white|black|slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)';
+const TW_COLOR_UTILITY = `(?:text|bg|border|ring|fill|stroke|outline|decoration|divide|from|via|to|accent|caret|shadow)-${TW_PALETTE}(?:-\\d{2,3})?(?:\\/\\d{1,3})?`;
 
 const RULES = [
   {
@@ -88,9 +90,9 @@ const RULES = [
     test: (src) => [
       ...src.matchAll(/#[0-9a-fA-F]{3,8}\b/g),
       ...src.matchAll(/\b(?:rgba?|hsla?|oklch|oklab|lab|lch|hwb|color)\s*\(/gi),
-      ...src.matchAll(new RegExp(`(?:^|[\\s'"\`])(?:hover:|focus:|active:|dark:|data-\\[[^\\]]*\\]:)*(?:text|bg|border|ring|fill|stroke|outline|decoration|divide|from|via|to|accent|caret|shadow)-${TW_PALETTE}(?:-\\d{2,3})?(?:\\/\\d{1,3})?\\b`, 'g')),
+      ...src.matchAll(new RegExp(`(?:^|[\\s'"\`])(?:[^\\s'"\`]+:)*!?${TW_COLOR_UTILITY}\\b`, 'g')),
+      ...src.matchAll(/var\(--(?:gray|white|black|overlay|error|warning|success|info|brand)-?[\w-]*\)/gi),
     ],
-    filter: (line) => !line.includes('currentColor') && !line.includes('design-check-ignore'),
   },
   {
     id: 'N6', desc: 'positive letter-spacing / wide tracking banned',
@@ -115,6 +117,77 @@ const RULES = [
 
 const violations = [];
 
+function collectConstantValues(sourceFile) {
+  const declarations = new Map();
+  const results = [];
+
+  function evaluate(node, stack = new Set()) {
+    if (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)) return node.text;
+    if (ts.isNumericLiteral(node)) return Number(node.text);
+    if (ts.isParenthesizedExpression(node) || ts.isAsExpression(node) || ts.isTypeAssertionExpression(node)) {
+      return evaluate(node.expression, stack);
+    }
+    if (ts.isIdentifier(node)) {
+      if (stack.has(node.text)) return undefined;
+      const initializer = declarations.get(node.text);
+      if (!initializer) return undefined;
+      return evaluate(initializer, new Set([...stack, node.text]));
+    }
+    if (ts.isBinaryExpression(node) && node.operatorToken.kind === ts.SyntaxKind.PlusToken) {
+      const left = evaluate(node.left, stack);
+      const right = evaluate(node.right, stack);
+      if ((typeof left === 'string' || typeof left === 'number') && (typeof right === 'string' || typeof right === 'number')) {
+        return String(left) + String(right);
+      }
+    }
+    if (ts.isTemplateExpression(node)) {
+      let value = node.head.text;
+      for (const span of node.templateSpans) {
+        const expression = evaluate(span.expression, stack);
+        if (typeof expression !== 'string' && typeof expression !== 'number') return undefined;
+        value += String(expression) + span.literal.text;
+      }
+      return value;
+    }
+    if (ts.isArrayLiteralExpression(node)) {
+      const values = node.elements.map((element) => evaluate(element, stack));
+      return values.every((value) => typeof value === 'string' || typeof value === 'number') ? values : undefined;
+    }
+    if (
+      ts.isCallExpression(node) &&
+      ts.isPropertyAccessExpression(node.expression) &&
+      node.expression.name.text === 'join'
+    ) {
+      const target = evaluate(node.expression.expression, stack);
+      const separator = node.arguments.length === 0 ? ',' : evaluate(node.arguments[0], stack);
+      if (Array.isArray(target) && typeof separator === 'string') return target.join(separator);
+    }
+    return undefined;
+  }
+
+  function visit(node) {
+    if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && node.initializer) {
+      declarations.set(node.name.text, node.initializer);
+    }
+    ts.forEachChild(node, visit);
+  }
+  visit(sourceFile);
+
+  function collect(node) {
+    const value = evaluate(node);
+    if (typeof value === 'string' && !ts.isStringLiteral(node) && !ts.isNoSubstitutionTemplateLiteral(node)) {
+      results.push({ value, node });
+    }
+    if (ts.isComputedPropertyName(node)) {
+      const property = evaluate(node.expression);
+      if (typeof property === 'string') results.push({ value: property, node });
+    }
+    ts.forEachChild(node, collect);
+  }
+  collect(sourceFile);
+  return results;
+}
+
 function scan(dir) {
   let entries;
   try { entries = readdirSync(dir); } catch { return; }
@@ -135,6 +208,18 @@ function scan(dir) {
         const line = lines[lineNo - 1] ?? '';
         if (rule.filter && !rule.filter(line)) continue;
         violations.push({ file: relative(process.cwd(), full), line: lineNo, rule: rule.id, desc: rule.desc, snippet: line.trim().slice(0, 80) });
+      }
+    }
+
+    if (!entry.endsWith('.css')) {
+      const sourceFile = ts.createSourceFile(full, raw, ts.ScriptTarget.Latest, true, entry.endsWith('x') ? ts.ScriptKind.TSX : ts.ScriptKind.TS);
+      for (const { value, node } of collectConstantValues(sourceFile)) {
+        for (const rule of RULES.filter(({ id }) => ['N1', 'N2', 'N4'].includes(id))) {
+          if (rule.test(value).length === 0) continue;
+          const lineNo = sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile)).line + 1;
+          const line = lines[lineNo - 1] ?? '';
+          violations.push({ file: relative(process.cwd(), full), line: lineNo, rule: rule.id, desc: rule.desc, snippet: line.trim().slice(0, 80) });
+        }
       }
     }
   }

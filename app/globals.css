@@ -1,16 +1,23 @@
-@import 'tailwindcss';
+@import 'tailwindcss' source(none);
 @import 'tw-animate-css';
+
+@source './';
+@source '../components';
+@source '../examples';
+@source '../lib';
 
 @import '../tokens/primitives.css';
 @import '../tokens/semantic.css';
-/* In a project: also import './theme.css' AFTER semantic.css */
-/* @import '../tokens/theme.css'; */
+@import '../tokens/theme.css';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* Map tokens into Tailwind v4 theme so utilities resolve from the system. */
 /* Note: the smallest text size is intentionally NOT mapped (rule N2). */
 @theme inline {
+  --color-*: initial;
+  --text-*: initial;
+
   --color-canvas: var(--color-canvas);
   --color-surface: var(--color-surface);
 

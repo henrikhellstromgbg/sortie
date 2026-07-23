@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Base design system',
-  description: 'APCA-verified base design system',
+  title: 'Sortie design system',
+  description: 'A locked, APCA-verified design system for shipping accessible product interfaces',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

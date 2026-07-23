@@ -1,8 +1,8 @@
-# base-ds
+# Sortie
 
-Base design system for all projects. APCA-verified OKLCH color system,
-Radix-based components, Carbon icons, machine-enforced design rules, and
-agent skills for Claude Code (mirrored for Codex via AGENTS.md).
+A locked, APCA-verified design system for shipping accessible product
+interfaces. Sortie combines OKLCH tokens, Radix-based components, Carbon
+icons, machine-enforced design rules, and agent guidance for Codex and Claude.
 
 ## Start a new project
 
@@ -10,9 +10,9 @@ agent skills for Claude Code (mirrored for Codex via AGENTS.md).
 ./scripts/new-project.sh my-project
 cd ~/sites/my-project
 npm install
-# Edit tokens/theme.css (brand colors in OKLCH, fonts)
+# Edit the active tokens/theme.css (brand colors in OKLCH, fonts)
 npm run contrast-check
-# Uncomment the theme.css import in app/globals.css
+npm run build
 ```
 
 The copy includes CLAUDE.md, AGENTS.md, RULES.md, skills, and scripts, so
@@ -23,8 +23,8 @@ Claude Code and Codex are constrained from the first prompt.
 | Command | What it does |
 |---|---|
 | `npm run design-check` | Machine check of all `[lint]` rules in RULES.md |
-| `npm run contrast-check` | APCA verification of theme brand pairs |
-| `npm run verify-scales` | Verify the full APCA matrix, parsed from primitives.css |
+| `npm run contrast-check` | APCA verification of 46 rendered theme-brand pairs |
+| `npm run verify-scales` | Verify the full rendered APCA matrix, parsed from primitives.css and semantic.css |
 | `npm run build` | Production Next.js build (the repo is a runnable starter) |
 
 ## Add or change a rule
@@ -60,14 +60,16 @@ examples/               reference views showing correct composition
 
 | Tier | Min Lc | Verified against |
 |---|---|---|
-| Primary text | 90 | all five surfaces, both modes |
-| Body text (secondary, status text, links) | 75 | all five surfaces (secondary), status bg + canvas + surface (status text), both modes |
-| Meta text (tertiary: hints, timestamps, placeholders) | 60 | static surfaces only (canvas/surface/raised/sunken); NOT permitted on hover/active (rule A13) and never body copy |
+| Primary text | 90 | all six semantic surfaces, both modes |
+| Body text (secondary, status text, links) | 75 | all six semantic surfaces; status text is also checked on its status background, both modes |
+| Meta text (tertiary: hints, timestamps, placeholders) | 60 | four static surfaces only (canvas/surface/raised/sunken); NOT permitted on hover/active (rule A13) and never body copy |
 | Non-text UI (icons, status indicators) | 45 | canvas + surface, both modes |
 | Input/control borders (border-strong) | 30 | surface, both modes; borders are never the sole affordance (filled bg + visible label, rule N8) |
-| Decorative separators (border-subtle) | exempt | non-essential graphics per WCAG 1.4.11; reported informationally |
+| Decorative uses of border-subtle | exempt | only when the border is non-essential and another visual affordance identifies the grouping; reported informationally |
 
-`npm run verify-scales` runs the full 76-pair matrix. The script parses
-tokens/primitives.css directly, so the CSS and the verification cannot
-drift apart. Changing any primitive without re-running the check is the
-only way to break the guarantee, so run it in CI or pre-commit.
+`npm run verify-scales` runs the full 114-pair base matrix. It resolves the
+rendered pairings from both `tokens/primitives.css` and `tokens/semantic.css`,
+including duplicated semantic surfaces that currently share a primitive.
+`npm run contrast-check` separately resolves the active `tokens/theme.css`
+through the same semantic chain and checks the states consumed by buttons,
+selected rows, and focus rings. Run both commands in CI or pre-commit.

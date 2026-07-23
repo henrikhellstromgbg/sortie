@@ -36,7 +36,7 @@
   --color-accent-subtle:   var(--brand-accent-subtle);
   --color-focus-ring:      var(--info-base);
   --color-text-on-status:  var(--white);     /* text on solid status colors (destructive buttons) */
-  --color-overlay:         oklch(0 0 0 / 0.5); /* dialog/sheet scrim */
+  --color-overlay:         var(--overlay-50); /* dialog/sheet scrim */
 
   /* ---- Status (bg/border/base/text per status; base = icons and large UI) ---- */
   --color-status-error-bg:       var(--error-bg);
@@ -80,6 +80,7 @@
   --color-border-strong:   var(--gray-500);
 
   --color-focus-ring:      var(--info-base-dark);
+  --color-text-on-status:  var(--gray-950);
 
   --color-status-error-bg:       var(--error-bg-dark);
   --color-status-error-border:   var(--error-border-dark);

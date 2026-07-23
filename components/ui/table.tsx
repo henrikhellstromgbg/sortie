@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { cn } from '@/lib/cn';
 
-// Table headers: sentence case, NEVER uppercase (N1). th uses scope for a11y.
+// Table headers use sentence case (N1). th uses scope for a11y.
 
 const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
   ({ className, ...props }, ref) => (

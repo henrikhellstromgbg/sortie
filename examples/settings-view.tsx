@@ -40,7 +40,7 @@ export default function SettingsView() {
   return (
     <main className="mx-auto flex max-w-3xl flex-col gap-[var(--space-8)] p-[var(--space-8)]">
       <header className="flex flex-col gap-[var(--space-2)]">
-        {/* Eyebrow: sentence case, secondary color. Never uppercase (N1). */}
+        {/* Eyebrow: sentence case and secondary color (N1). */}
         <p className="text-[length:var(--text-sm)] text-[var(--color-text-tertiary)]">Workspace settings</p>
         <h1 className="text-[length:var(--text-3xl)] font-semibold leading-[var(--leading-tight)] tracking-[var(--tracking-tight)]">
           Team members
