@@ -1,0 +1,39 @@
+/* ==========================================================================
+   PROJECT THEME — copy to theme.css in a new project and edit.
+   This is the ONLY file that changes between projects.
+   Rules:
+   1. Define brand colors in OKLCH.
+   2. After changing --brand-primary or --brand-primary-text, run:
+        npm run contrast-check
+      Text on primary must reach APCA Lc 75+ (Lc 60+ if 24px+/bold only).
+   3. Never redefine gray, status colors, spacing, or type scale here.
+   ========================================================================== */
+
+:root {
+  /* Brand — example: a deep teal identity */
+  --brand-primary:        oklch(0.42 0.09 200);
+  --brand-primary-hover:  oklch(0.36 0.09 200);
+  --brand-primary-text:   oklch(1 0 0);
+  --brand-accent:         oklch(0.62 0.12 200);
+  --brand-accent-subtle:  oklch(0.96 0.03 200);
+
+  /* Typography — project fonts (loaded via next/font or @font-face) */
+  --font-sans: 'Inter', system-ui, sans-serif;
+  /* Optional display face for headings:
+  --font-display: 'Fraunces', serif;
+  */
+
+  /* Optional: project radius personality (stay within sm/md/lg system)
+  --radius-md: 0.625rem;
+  */
+}
+
+.dark {
+  /* Dark brand overrides ARE consumed: semantic.css maps --color-primary to
+     var(--brand-primary) in both modes (defaults live in primitives.css). */
+  --brand-accent:         oklch(0.72 0.11 200);
+  --brand-accent-subtle:  oklch(0.24 0.03 200);
+  --brand-primary:        oklch(0.85 0.07 200);
+  --brand-primary-hover:  oklch(0.90 0.07 200);
+  --brand-primary-text:   oklch(0.15 0.02 200);
+}
