@@ -1,4 +1,4 @@
-# Sortie design system
+# Base design system
 
 This project uses a locked design system. Your job when building UI is
 composition, not invention. The design decisions are already made.

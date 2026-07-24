@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Usage: ./scripts/new-project.sh <project-name>
-# Copies Sortie into ~/sites/<project-name> and sets up the theme file.
+# Copies base-ds into ~/sites/<project-name> and sets up the theme file.
 set -euo pipefail
 
 NAME="${1:?Usage: new-project.sh <project-name>}"
@@ -15,8 +15,8 @@ fi
 mkdir -p "$DEST"
 rsync -a --exclude node_modules --exclude .git --exclude tools/scales-output.txt "$SRC/" "$DEST/"
 cp "$DEST/tokens/theme.example.css" "$DEST/tokens/theme.css"
-sed -i '' "s/\"name\": \"sortie\"/\"name\": \"$NAME\"/" "$DEST/package.json" 2>/dev/null || \
-  sed -i "s/\"name\": \"sortie\"/\"name\": \"$NAME\"/" "$DEST/package.json"
+sed -i '' "s/\"name\": \"base-ds\"/\"name\": \"$NAME\"/" "$DEST/package.json" 2>/dev/null || \
+  sed -i "s/\"name\": \"base-ds\"/\"name\": \"$NAME\"/" "$DEST/package.json"
 
 echo "Created $DEST"
 echo "Next steps:"

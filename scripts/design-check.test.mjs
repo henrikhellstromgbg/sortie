@@ -7,7 +7,7 @@ import { spawnSync } from 'node:child_process';
 const checker = fileURLToPath(new URL('./design-check.mjs', import.meta.url));
 
 function runFixture(source) {
-  const root = mkdtempSync(join(tmpdir(), 'sortie-design-check-'));
+  const root = mkdtempSync(join(tmpdir(), 'base-ds-design-check-'));
   mkdirSync(join(root, 'app'));
   writeFileSync(join(root, 'app', 'fixture.tsx'), source);
   const result = spawnSync(process.execPath, [checker], { cwd: root, encoding: 'utf8' });

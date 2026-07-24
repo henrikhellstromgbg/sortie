@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Sortie design system',
+  title: 'Base design system',
   description: 'A locked, APCA-verified design system for shipping accessible product interfaces',
 };
 

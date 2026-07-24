@@ -1,7 +1,7 @@
-# Sortie
+# base-ds
 
 A locked, APCA-verified design system for shipping accessible product
-interfaces. Sortie combines OKLCH tokens, Radix-based components, Carbon
+interfaces. It combines OKLCH tokens, Radix-based components, Carbon
 icons, machine-enforced design rules, and agent guidance for Codex and Claude.
 
 ## Start a new project
